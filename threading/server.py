@@ -1,7 +1,8 @@
-# server
+#!/usr/bin/env python3
 import socket
 import sys
 import traceback
+import struct
 from threading import Thread
 
 
@@ -10,10 +11,11 @@ def main():
 
 
 def start_server():
-	host = "127.0.0.1"
-	port = 8888         # arbitrary non-privileged port
+	host = ''
+	port = 12345         # arbitrary non-privileged port
 
 	soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	
 	soc.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)   # SO_REUSEADDR flag tells the kernel to reuse a local socket in TIME_WAIT state, without waiting for its natural timeout to expire
 	print("Socket created")
 
@@ -58,13 +60,13 @@ def client_thread(connection, ip, port, max_buffer_size = 5120):
 
 
 def receive_input(connection, max_buffer_size):
-	client_input = connection.recv(max_buffer_size)
+	client_input = connection.recv(2)
 	client_input_size = sys.getsizeof(client_input)
 
 	if client_input_size > max_buffer_size:
 		print("The input size is greater than expected {}".format(client_input_size))
 
-	decoded_input = client_input.decode("utf8").rstrip()  # decode and strip end of line
+	decoded_input = struct.unpack('!H', client_input) [0]  # decode and strip end of line
 	result = process_input(decoded_input)
 
 	return result

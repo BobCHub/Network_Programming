@@ -26,10 +26,12 @@ class MapGrid:
 			pos = (x, y - 1)
 		if d[0] == 'd':
 			pos = (x, y + 1)
-
-		if pos not in self.walls:
+		col,row = pos
+		if row >=0 and col >=0 and row <=9 and col <=19 and pos not in self.walls:
+			
+		
 			self.player = pos
-
+			print(str(2), pos)
 		if pos == self.goal:
 			print("You made it to the end!")
 
@@ -76,7 +78,7 @@ def main():
 		draw_grid(g)
 		d = input("Which way? (r, l, u, d)")
 		g.move_player(d)
-		clear()
+		#clear()
 	print("You made it!")
 
 
